@@ -1,0 +1,58 @@
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: clinical-rag-ollama
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    restart: unless-stopped
+    # Remove the deploy block if you don't have an NVIDIA GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: clinical-rag-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - LLM_BASE_URL=http://ollama:11434/v1
+      - LLM_API_KEY=ollama
+      - LLM_MODEL_NAME=llama3.2-clinical:latest
+      - LLM_TEMPERATURE=0.0
+      - LLM_MAX_TOKENS=1024
+      - GRAPH_DATA_PATH=./graph/data/symptom_disease.json
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - CORS_ORIGINS=http://localhost:3000
+      - LOG_LEVEL=INFO
+    depends_on:
+      - ollama
+    restart: unless-stopped
+    volumes:
+      - backend_data:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: clinical-rag-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_BASE_URL=http://backend:8000
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  ollama_data:
+  backend_data:

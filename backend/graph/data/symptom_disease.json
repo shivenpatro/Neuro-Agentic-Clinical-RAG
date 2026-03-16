@@ -1,0 +1,812 @@
+{
+  "diseases": [
+    {
+      "id": "appendicitis",
+      "name": "Appendicitis",
+      "icd10": "K37",
+      "symptoms": {
+        "right_lower_quadrant_pain": { "weight": 0.95, "required": true },
+        "fever": { "weight": 0.75, "required": false },
+        "nausea": { "weight": 0.65, "required": false },
+        "vomiting": { "weight": 0.6, "required": false },
+        "rebound_tenderness": { "weight": 0.9, "required": false },
+        "loss_of_appetite": { "weight": 0.7, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "wheezing", "chest_pain", "sore_throat"],
+      "min_required_weight": 0.8,
+      "urgency": "emergency",
+      "description": "Inflammation of the appendix, typically presenting with right lower quadrant pain."
+    },
+    {
+      "id": "pneumonia",
+      "name": "Pneumonia",
+      "icd10": "J18.9",
+      "symptoms": {
+        "productive_cough": { "weight": 0.9, "required": true },
+        "fever": { "weight": 0.85, "required": true },
+        "dyspnea": { "weight": 0.8, "required": false },
+        "chest_pain": { "weight": 0.7, "required": false },
+        "fatigue": { "weight": 0.65, "required": false },
+        "wheezing": { "weight": 0.55, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "rebound_tenderness"],
+      "min_required_weight": 0.85,
+      "urgency": "urgent",
+      "description": "Lung infection causing alveolar inflammation and consolidation."
+    },
+    {
+      "id": "migraine",
+      "name": "Migraine",
+      "icd10": "G43.9",
+      "symptoms": {
+        "severe_headache": { "weight": 0.95, "required": true },
+        "photophobia": { "weight": 0.8, "required": false },
+        "nausea": { "weight": 0.7, "required": false },
+        "vomiting": { "weight": 0.6, "required": false },
+        "visual_aura": { "weight": 0.65, "required": false },
+        "phonophobia": { "weight": 0.75, "required": false }
+      },
+      "exclusion_symptoms": ["fever", "right_lower_quadrant_pain", "productive_cough"],
+      "min_required_weight": 0.95,
+      "urgency": "non_urgent",
+      "description": "Recurring severe headache often with neurological symptoms."
+    },
+    {
+      "id": "urinary_tract_infection",
+      "name": "Urinary Tract Infection",
+      "icd10": "N39.0",
+      "symptoms": {
+        "dysuria": { "weight": 0.95, "required": true },
+        "urinary_frequency": { "weight": 0.9, "required": true },
+        "lower_abdominal_pain": { "weight": 0.7, "required": false },
+        "fever": { "weight": 0.55, "required": false },
+        "hematuria": { "weight": 0.65, "required": false },
+        "urgency_urination": { "weight": 0.8, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "chest_pain", "severe_headache"],
+      "min_required_weight": 0.85,
+      "urgency": "routine",
+      "description": "Bacterial infection of the urinary tract, most commonly the bladder."
+    },
+    {
+      "id": "myocardial_infarction",
+      "name": "Myocardial Infarction",
+      "icd10": "I21.9",
+      "symptoms": {
+        "chest_pain": { "weight": 0.95, "required": true },
+        "radiating_arm_pain": { "weight": 0.8, "required": false },
+        "dyspnea": { "weight": 0.75, "required": false },
+        "diaphoresis": { "weight": 0.7, "required": false },
+        "nausea": { "weight": 0.6, "required": false },
+        "jaw_pain": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "productive_cough", "dysuria"],
+      "min_required_weight": 0.95,
+      "urgency": "emergency",
+      "description": "Cardiac muscle death due to coronary artery occlusion."
+    },
+    {
+      "id": "gastroenteritis",
+      "name": "Gastroenteritis",
+      "icd10": "K52.9",
+      "symptoms": {
+        "nausea": { "weight": 0.85, "required": true },
+        "vomiting": { "weight": 0.85, "required": true },
+        "diarrhea": { "weight": 0.9, "required": true },
+        "abdominal_cramps": { "weight": 0.75, "required": false },
+        "fever": { "weight": 0.6, "required": false },
+        "loss_of_appetite": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["chest_pain", "severe_headache", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.85,
+      "urgency": "routine",
+      "description": "Inflammation of the gastrointestinal tract causing vomiting and diarrhea."
+    },
+    {
+      "id": "asthma_exacerbation",
+      "name": "Asthma Exacerbation",
+      "icd10": "J45.901",
+      "symptoms": {
+        "wheezing": { "weight": 0.95, "required": true },
+        "dyspnea": { "weight": 0.9, "required": true },
+        "chest_tightness": { "weight": 0.85, "required": false },
+        "cough": { "weight": 0.7, "required": false },
+        "increased_respiratory_rate": { "weight": 0.75, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "dysuria", "severe_headache"],
+      "min_required_weight": 0.9,
+      "urgency": "urgent",
+      "description": "Acute worsening of asthma with bronchospasm and airflow limitation."
+    },
+    {
+      "id": "hypoglycemia",
+      "name": "Hypoglycemia",
+      "icd10": "E16.0",
+      "symptoms": {
+        "dizziness": { "weight": 0.85, "required": true },
+        "diaphoresis": { "weight": 0.8, "required": false },
+        "tremor": { "weight": 0.75, "required": false },
+        "palpitations": { "weight": 0.7, "required": false },
+        "confusion": { "weight": 0.8, "required": false },
+        "fatigue": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.8,
+      "urgency": "urgent",
+      "description": "Abnormally low blood glucose causing systemic and neurological symptoms."
+    },
+    {
+      "id": "copd_exacerbation",
+      "name": "COPD Exacerbation",
+      "icd10": "J44.1",
+      "symptoms": {
+        "dyspnea": { "weight": 0.95, "required": true },
+        "productive_cough": { "weight": 0.9, "required": true },
+        "increased_sputum": { "weight": 0.85, "required": false },
+        "wheezing": { "weight": 0.75, "required": false },
+        "cyanosis": { "weight": 0.7, "required": false },
+        "chest_tightness": { "weight": 0.65, "required": false },
+        "fatigue": { "weight": 0.6, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "dysuria", "severe_headache"],
+      "min_required_weight": 0.9,
+      "urgency": "urgent",
+      "description": "Acute worsening of COPD with increased dyspnea and sputum production."
+    },
+    {
+      "id": "pulmonary_embolism",
+      "name": "Pulmonary Embolism",
+      "icd10": "I26.99",
+      "symptoms": {
+        "dyspnea": { "weight": 0.95, "required": true },
+        "chest_pain": { "weight": 0.85, "required": false },
+        "tachycardia": { "weight": 0.8, "required": false },
+        "hemoptysis": { "weight": 0.7, "required": false },
+        "leg_swelling": { "weight": 0.65, "required": false },
+        "diaphoresis": { "weight": 0.6, "required": false },
+        "syncope": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "dysuria"],
+      "min_required_weight": 0.85,
+      "urgency": "emergency",
+      "description": "Blood clot obstructing pulmonary artery causing acute cardiorespiratory compromise."
+    },
+    {
+      "id": "acute_heart_failure",
+      "name": "Acute Heart Failure",
+      "icd10": "I50.9",
+      "symptoms": {
+        "dyspnea": { "weight": 0.95, "required": true },
+        "orthopnea": { "weight": 0.85, "required": false },
+        "leg_swelling": { "weight": 0.8, "required": false },
+        "fatigue": { "weight": 0.75, "required": false },
+        "chest_pain": { "weight": 0.6, "required": false },
+        "palpitations": { "weight": 0.65, "required": false },
+        "cough": { "weight": 0.7, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "dysuria", "severe_headache"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Acute decompensated heart failure with pulmonary congestion and systemic edema."
+    },
+    {
+      "id": "atrial_fibrillation",
+      "name": "Atrial Fibrillation",
+      "icd10": "I48.91",
+      "symptoms": {
+        "palpitations": { "weight": 0.95, "required": true },
+        "irregular_heartbeat": { "weight": 0.9, "required": true },
+        "dyspnea": { "weight": 0.75, "required": false },
+        "fatigue": { "weight": 0.7, "required": false },
+        "dizziness": { "weight": 0.65, "required": false },
+        "chest_pain": { "weight": 0.55, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "productive_cough", "dysuria"],
+      "min_required_weight": 0.9,
+      "urgency": "urgent",
+      "description": "Irregular atrial electrical activity causing uncoordinated atrial contractions."
+    },
+    {
+      "id": "deep_vein_thrombosis",
+      "name": "Deep Vein Thrombosis",
+      "icd10": "I82.409",
+      "symptoms": {
+        "leg_swelling": { "weight": 0.9, "required": true },
+        "leg_pain": { "weight": 0.85, "required": true },
+        "leg_redness": { "weight": 0.75, "required": false },
+        "leg_warmth": { "weight": 0.7, "required": false },
+        "calf_tenderness": { "weight": 0.8, "required": false }
+      },
+      "exclusion_symptoms": ["chest_pain", "dyspnea", "severe_headache", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.85,
+      "urgency": "urgent",
+      "description": "Blood clot forming in deep veins, typically of the lower extremities."
+    },
+    {
+      "id": "ischemic_stroke",
+      "name": "Ischemic Stroke",
+      "icd10": "I63.9",
+      "symptoms": {
+        "facial_drooping": { "weight": 0.95, "required": false },
+        "arm_weakness": { "weight": 0.9, "required": false },
+        "speech_difficulty": { "weight": 0.9, "required": false },
+        "sudden_confusion": { "weight": 0.85, "required": false },
+        "vision_changes": { "weight": 0.8, "required": false },
+        "severe_headache": { "weight": 0.75, "required": false },
+        "loss_of_balance": { "weight": 0.8, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "dysuria", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.85,
+      "urgency": "emergency",
+      "description": "Sudden neurological deficit caused by cerebral ischemia or infarction."
+    },
+    {
+      "id": "meningitis",
+      "name": "Meningitis",
+      "icd10": "G03.9",
+      "symptoms": {
+        "severe_headache": { "weight": 0.95, "required": true },
+        "neck_stiffness": { "weight": 0.9, "required": true },
+        "fever": { "weight": 0.85, "required": true },
+        "photophobia": { "weight": 0.8, "required": false },
+        "vomiting": { "weight": 0.7, "required": false },
+        "confusion": { "weight": 0.75, "required": false },
+        "rash": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "dysuria", "productive_cough"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Inflammation of meninges causing classic triad of headache, neck stiffness, and fever."
+    },
+    {
+      "id": "acute_cholecystitis",
+      "name": "Acute Cholecystitis",
+      "icd10": "K81.0",
+      "symptoms": {
+        "right_upper_quadrant_pain": { "weight": 0.95, "required": true },
+        "fever": { "weight": 0.8, "required": false },
+        "nausea": { "weight": 0.75, "required": false },
+        "vomiting": { "weight": 0.7, "required": false },
+        "murphy_sign": { "weight": 0.85, "required": false },
+        "right_shoulder_pain": { "weight": 0.65, "required": false },
+        "loss_of_appetite": { "weight": 0.6, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "dysuria", "severe_headache", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.85,
+      "urgency": "urgent",
+      "description": "Acute inflammation of the gallbladder, often due to gallstones."
+    },
+    {
+      "id": "acute_pancreatitis",
+      "name": "Acute Pancreatitis",
+      "icd10": "K85.9",
+      "symptoms": {
+        "epigastric_pain": { "weight": 0.95, "required": true },
+        "radiating_back_pain": { "weight": 0.85, "required": false },
+        "nausea": { "weight": 0.8, "required": false },
+        "vomiting": { "weight": 0.75, "required": false },
+        "fever": { "weight": 0.65, "required": false },
+        "abdominal_distension": { "weight": 0.6, "required": false },
+        "loss_of_appetite": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "dysuria", "chest_pain", "severe_headache"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Acute inflammation of the pancreas causing epigastric pain radiating to the back."
+    },
+    {
+      "id": "peptic_ulcer_disease",
+      "name": "Peptic Ulcer Disease",
+      "icd10": "K27.9",
+      "symptoms": {
+        "epigastric_pain": { "weight": 0.9, "required": true },
+        "nausea": { "weight": 0.7, "required": false },
+        "bloating": { "weight": 0.65, "required": false },
+        "loss_of_appetite": { "weight": 0.6, "required": false },
+        "hematemesis": { "weight": 0.75, "required": false },
+        "melena": { "weight": 0.7, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "chest_pain", "severe_headache", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.8,
+      "urgency": "routine",
+      "description": "Ulceration of the gastric or duodenal mucosa causing epigastric pain."
+    },
+    {
+      "id": "renal_colic",
+      "name": "Renal Colic",
+      "icd10": "N23",
+      "symptoms": {
+        "flank_pain": { "weight": 0.95, "required": true },
+        "hematuria": { "weight": 0.85, "required": false },
+        "nausea": { "weight": 0.7, "required": false },
+        "vomiting": { "weight": 0.65, "required": false },
+        "dysuria": { "weight": 0.6, "required": false },
+        "urinary_frequency": { "weight": 0.55, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "chest_pain", "severe_headache"],
+      "min_required_weight": 0.85,
+      "urgency": "urgent",
+      "description": "Severe flank pain caused by obstruction of the ureter by a kidney stone."
+    },
+    {
+      "id": "pyelonephritis",
+      "name": "Pyelonephritis",
+      "icd10": "N10",
+      "symptoms": {
+        "flank_pain": { "weight": 0.9, "required": true },
+        "fever": { "weight": 0.85, "required": true },
+        "dysuria": { "weight": 0.8, "required": false },
+        "urinary_frequency": { "weight": 0.75, "required": false },
+        "nausea": { "weight": 0.65, "required": false },
+        "costovertebral_tenderness": { "weight": 0.85, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "chest_pain", "severe_headache"],
+      "min_required_weight": 0.9,
+      "urgency": "urgent",
+      "description": "Bacterial infection of the kidneys causing flank pain, fever, and urinary symptoms."
+    },
+    {
+      "id": "diabetic_ketoacidosis",
+      "name": "Diabetic Ketoacidosis",
+      "icd10": "E11.10",
+      "symptoms": {
+        "polyuria": { "weight": 0.9, "required": true },
+        "polydipsia": { "weight": 0.85, "required": true },
+        "nausea": { "weight": 0.8, "required": false },
+        "vomiting": { "weight": 0.75, "required": false },
+        "abdominal_pain": { "weight": 0.7, "required": false },
+        "confusion": { "weight": 0.75, "required": false },
+        "fruity_breath": { "weight": 0.8, "required": false },
+        "fatigue": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "chest_pain"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Life-threatening complication of diabetes with hyperglycemia, ketosis, and metabolic acidosis."
+    },
+    {
+      "id": "influenza",
+      "name": "Influenza",
+      "icd10": "J11.1",
+      "symptoms": {
+        "fever": { "weight": 0.9, "required": true },
+        "myalgia": { "weight": 0.85, "required": true },
+        "headache": { "weight": 0.8, "required": false },
+        "cough": { "weight": 0.75, "required": false },
+        "sore_throat": { "weight": 0.7, "required": false },
+        "fatigue": { "weight": 0.85, "required": false },
+        "chills": { "weight": 0.75, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "chest_pain", "dysuria"],
+      "min_required_weight": 0.85,
+      "urgency": "routine",
+      "description": "Acute viral respiratory illness with systemic symptoms of fever and myalgia."
+    },
+    {
+      "id": "sepsis",
+      "name": "Sepsis",
+      "icd10": "A41.9",
+      "symptoms": {
+        "fever": { "weight": 0.9, "required": true },
+        "tachycardia": { "weight": 0.85, "required": false },
+        "confusion": { "weight": 0.8, "required": false },
+        "hypotension": { "weight": 0.85, "required": false },
+        "increased_respiratory_rate": { "weight": 0.75, "required": false },
+        "diaphoresis": { "weight": 0.7, "required": false },
+        "fatigue": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["severe_headache", "productive_cough"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Life-threatening systemic infection causing organ dysfunction and hemodynamic instability."
+    },
+    {
+      "id": "panic_attack",
+      "name": "Panic Attack",
+      "icd10": "F41.0",
+      "symptoms": {
+        "palpitations": { "weight": 0.9, "required": true },
+        "chest_pain": { "weight": 0.8, "required": false },
+        "dyspnea": { "weight": 0.85, "required": false },
+        "tremor": { "weight": 0.75, "required": false },
+        "diaphoresis": { "weight": 0.7, "required": false },
+        "dizziness": { "weight": 0.75, "required": false },
+        "fear_of_dying": { "weight": 0.85, "required": false },
+        "numbness": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["fever", "productive_cough", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.85,
+      "urgency": "urgent",
+      "description": "Acute episode of intense anxiety with somatic symptoms mimicking cardiac events."
+    },
+    {
+      "id": "gerd",
+      "name": "Gastroesophageal Reflux Disease",
+      "icd10": "K21.0",
+      "symptoms": {
+        "heartburn": { "weight": 0.95, "required": true },
+        "regurgitation": { "weight": 0.85, "required": false },
+        "chest_pain": { "weight": 0.65, "required": false },
+        "bloating": { "weight": 0.6, "required": false },
+        "sore_throat": { "weight": 0.55, "required": false },
+        "cough": { "weight": 0.5, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "dysuria", "severe_headache", "fever"],
+      "min_required_weight": 0.85,
+      "urgency": "routine",
+      "description": "Chronic acid reflux causing heartburn and regurgitation due to LES incompetence."
+    },
+    {
+      "id": "hypertensive_crisis",
+      "name": "Hypertensive Crisis",
+      "icd10": "I16.1",
+      "symptoms": {
+        "severe_headache": { "weight": 0.9, "required": true },
+        "vision_changes": { "weight": 0.85, "required": false },
+        "chest_pain": { "weight": 0.8, "required": false },
+        "dyspnea": { "weight": 0.75, "required": false },
+        "nausea": { "weight": 0.65, "required": false },
+        "confusion": { "weight": 0.7, "required": false },
+        "epistaxis": { "weight": 0.6, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "productive_cough", "dysuria"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Severely elevated blood pressure with acute end-organ damage requiring immediate intervention."
+    },
+    {
+      "id": "cellulitis",
+      "name": "Cellulitis",
+      "icd10": "L03.90",
+      "symptoms": {
+        "skin_redness": { "weight": 0.9, "required": true },
+        "skin_warmth": { "weight": 0.85, "required": true },
+        "skin_swelling": { "weight": 0.85, "required": false },
+        "fever": { "weight": 0.75, "required": false },
+        "skin_tenderness": { "weight": 0.8, "required": false },
+        "fatigue": { "weight": 0.55, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "chest_pain", "severe_headache", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.9,
+      "urgency": "routine",
+      "description": "Bacterial skin and subcutaneous tissue infection causing localized erythema and warmth."
+    },
+    {
+      "id": "acute_gout",
+      "name": "Acute Gout",
+      "icd10": "M10.9",
+      "symptoms": {
+        "joint_pain": { "weight": 0.9, "required": true },
+        "joint_swelling": { "weight": 0.85, "required": true },
+        "joint_redness": { "weight": 0.85, "required": false },
+        "joint_warmth": { "weight": 0.8, "required": false },
+        "severe_joint_tenderness": { "weight": 0.9, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "chest_pain", "severe_headache", "fever"],
+      "min_required_weight": 0.9,
+      "urgency": "routine",
+      "description": "Acute monoarthritis caused by monosodium urate crystal deposition, typically in the great toe."
+    },
+    {
+      "id": "covid19",
+      "name": "COVID-19",
+      "icd10": "U07.1",
+      "symptoms": {
+        "fever": { "weight": 0.85, "required": false },
+        "cough": { "weight": 0.8, "required": false },
+        "dyspnea": { "weight": 0.75, "required": false },
+        "anosmia": { "weight": 0.85, "required": false },
+        "ageusia": { "weight": 0.8, "required": false },
+        "fatigue": { "weight": 0.75, "required": false },
+        "myalgia": { "weight": 0.7, "required": false },
+        "sore_throat": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "dysuria"],
+      "min_required_weight": 0.8,
+      "urgency": "urgent",
+      "description": "SARS-CoV-2 viral infection with fever, respiratory symptoms, and loss of smell or taste."
+    },
+    {
+      "id": "tia",
+      "name": "Transient Ischemic Attack",
+      "icd10": "G45.9",
+      "symptoms": {
+        "sudden_weakness": { "weight": 0.9, "required": false },
+        "speech_difficulty": { "weight": 0.85, "required": false },
+        "vision_changes": { "weight": 0.8, "required": false },
+        "dizziness": { "weight": 0.75, "required": false },
+        "loss_of_balance": { "weight": 0.8, "required": false },
+        "facial_drooping": { "weight": 0.85, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "dysuria", "right_lower_quadrant_pain", "fever"],
+      "min_required_weight": 0.8,
+      "urgency": "emergency",
+      "description": "Brief neurological deficit resolving within 24 hours, a warning sign for stroke."
+    },
+    {
+      "id": "bronchitis",
+      "name": "Acute Bronchitis",
+      "icd10": "J20.9",
+      "symptoms": {
+        "cough": { "weight": 0.95, "required": true },
+        "sputum_production": { "weight": 0.8, "required": false },
+        "chest_discomfort": { "weight": 0.7, "required": false },
+        "low_grade_fever": { "weight": 0.6, "required": false },
+        "fatigue": { "weight": 0.65, "required": false },
+        "sore_throat": { "weight": 0.55, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "dysuria", "severe_headache"],
+      "min_required_weight": 0.85,
+      "urgency": "routine",
+      "description": "Acute inflammation of the bronchial mucosa, typically viral in origin."
+    },
+    {
+      "id": "angina_pectoris",
+      "name": "Unstable Angina",
+      "icd10": "I20.0",
+      "symptoms": {
+        "chest_pain": { "weight": 0.95, "required": true },
+        "radiating_arm_pain": { "weight": 0.75, "required": false },
+        "dyspnea": { "weight": 0.7, "required": false },
+        "diaphoresis": { "weight": 0.65, "required": false },
+        "nausea": { "weight": 0.55, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "productive_cough", "dysuria", "diarrhea"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Unstable angina with chest pain at rest or minimal exertion, signaling impending MI."
+    },
+    {
+      "id": "aortic_dissection",
+      "name": "Aortic Dissection",
+      "icd10": "I71.00",
+      "symptoms": {
+        "tearing_chest_pain": { "weight": 0.95, "required": true },
+        "radiating_back_pain": { "weight": 0.9, "required": true },
+        "diaphoresis": { "weight": 0.75, "required": false },
+        "syncope": { "weight": 0.7, "required": false },
+        "hypertension": { "weight": 0.65, "required": false },
+        "arm_weakness": { "weight": 0.6, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "productive_cough", "dysuria", "fever"],
+      "min_required_weight": 0.95,
+      "urgency": "emergency",
+      "description": "Life-threatening tear in the aortic intima causing sudden severe tearing chest pain."
+    },
+    {
+      "id": "hypothyroidism",
+      "name": "Hypothyroidism",
+      "icd10": "E03.9",
+      "symptoms": {
+        "fatigue": { "weight": 0.85, "required": true },
+        "weight_gain": { "weight": 0.8, "required": false },
+        "cold_intolerance": { "weight": 0.8, "required": false },
+        "constipation": { "weight": 0.7, "required": false },
+        "dry_skin": { "weight": 0.75, "required": false },
+        "hair_loss": { "weight": 0.7, "required": false },
+        "depression": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["chest_pain", "severe_headache", "right_lower_quadrant_pain", "fever"],
+      "min_required_weight": 0.85,
+      "urgency": "routine",
+      "description": "Underactive thyroid causing metabolic slowdown with fatigue, weight gain, and cold intolerance."
+    },
+    {
+      "id": "hyperthyroidism",
+      "name": "Hyperthyroidism",
+      "icd10": "E05.90",
+      "symptoms": {
+        "palpitations": { "weight": 0.85, "required": true },
+        "weight_loss": { "weight": 0.8, "required": false },
+        "heat_intolerance": { "weight": 0.8, "required": false },
+        "tremor": { "weight": 0.75, "required": false },
+        "diaphoresis": { "weight": 0.7, "required": false },
+        "anxiety": { "weight": 0.75, "required": false },
+        "diarrhea": { "weight": 0.6, "required": false }
+      },
+      "exclusion_symptoms": ["chest_pain", "severe_headache", "right_lower_quadrant_pain", "productive_cough"],
+      "min_required_weight": 0.85,
+      "urgency": "routine",
+      "description": "Overactive thyroid causing increased metabolism with palpitations, weight loss, and heat intolerance."
+    },
+    {
+      "id": "anxiety_disorder",
+      "name": "Generalized Anxiety Disorder",
+      "icd10": "F41.1",
+      "symptoms": {
+        "excessive_worry": { "weight": 0.9, "required": true },
+        "muscle_tension": { "weight": 0.8, "required": false },
+        "fatigue": { "weight": 0.75, "required": false },
+        "insomnia": { "weight": 0.8, "required": false },
+        "irritability": { "weight": 0.7, "required": false },
+        "difficulty_concentrating": { "weight": 0.75, "required": false },
+        "palpitations": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["fever", "chest_pain", "productive_cough", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.9,
+      "urgency": "routine",
+      "description": "Chronic excessive anxiety and worry causing significant functional impairment."
+    },
+    {
+      "id": "rhabdomyolysis",
+      "name": "Rhabdomyolysis",
+      "icd10": "M62.82",
+      "symptoms": {
+        "myalgia": { "weight": 0.9, "required": true },
+        "dark_urine": { "weight": 0.9, "required": false },
+        "muscle_weakness": { "weight": 0.85, "required": false },
+        "fatigue": { "weight": 0.75, "required": false },
+        "decreased_urine_output": { "weight": 0.7, "required": false },
+        "muscle_swelling": { "weight": 0.7, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "severe_headache", "chest_pain"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Breakdown of muscle tissue releasing myoglobin into the bloodstream, risking acute kidney injury."
+    },
+    {
+      "id": "anaphylaxis",
+      "name": "Anaphylaxis",
+      "icd10": "T78.2XXA",
+      "symptoms": {
+        "urticaria": { "weight": 0.85, "required": false },
+        "dyspnea": { "weight": 0.9, "required": true },
+        "throat_swelling": { "weight": 0.9, "required": false },
+        "hypotension": { "weight": 0.85, "required": false },
+        "tachycardia": { "weight": 0.8, "required": false },
+        "nausea": { "weight": 0.65, "required": false },
+        "flushing": { "weight": 0.7, "required": false }
+      },
+      "exclusion_symptoms": ["right_lower_quadrant_pain", "severe_headache"],
+      "min_required_weight": 0.9,
+      "urgency": "emergency",
+      "description": "Severe systemic allergic reaction causing airway compromise and cardiovascular collapse."
+    },
+    {
+      "id": "tension_headache",
+      "name": "Tension Headache",
+      "icd10": "G44.20",
+      "symptoms": {
+        "headache": { "weight": 0.9, "required": true },
+        "bilateral_head_pressure": { "weight": 0.85, "required": false },
+        "neck_tension": { "weight": 0.8, "required": false },
+        "fatigue": { "weight": 0.6, "required": false },
+        "scalp_tenderness": { "weight": 0.65, "required": false }
+      },
+      "exclusion_symptoms": ["fever", "neck_stiffness", "vomiting", "visual_aura", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.85,
+      "urgency": "non_urgent",
+      "description": "Most common headache type with bilateral pressing or tightening quality, non-pulsating."
+    },
+    {
+      "id": "diverticulitis",
+      "name": "Diverticulitis",
+      "icd10": "K57.30",
+      "symptoms": {
+        "left_lower_quadrant_pain": { "weight": 0.9, "required": true },
+        "fever": { "weight": 0.8, "required": false },
+        "nausea": { "weight": 0.65, "required": false },
+        "vomiting": { "weight": 0.6, "required": false },
+        "constipation": { "weight": 0.65, "required": false },
+        "diarrhea": { "weight": 0.55, "required": false }
+      },
+      "exclusion_symptoms": ["productive_cough", "chest_pain", "severe_headache", "right_lower_quadrant_pain"],
+      "min_required_weight": 0.85,
+      "urgency": "urgent",
+      "description": "Inflammation of colonic diverticula causing left lower quadrant pain and fever."
+    }
+  ],
+  "symptom_aliases": {
+    "stomach ache": "lower_abdominal_pain",
+    "belly pain": "lower_abdominal_pain",
+    "rlq pain": "right_lower_quadrant_pain",
+    "right side pain": "right_lower_quadrant_pain",
+    "high temperature": "fever",
+    "throwing up": "vomiting",
+    "shortness of breath": "dyspnea",
+    "sob": "dyspnea",
+    "racing heart": "palpitations",
+    "sweating": "diaphoresis",
+    "light sensitivity": "photophobia",
+    "painful urination": "dysuria",
+    "frequent urination": "urinary_frequency",
+    "blood in urine": "hematuria",
+    "shaking": "tremor",
+    "runny stool": "diarrhea",
+    "headache": "severe_headache",
+    "bad headache": "severe_headache",
+    "trouble breathing": "dyspnea",
+    "can't breathe": "dyspnea",
+    "difficulty breathing": "dyspnea",
+    "breath difficulty": "dyspnea",
+    "chest tightness": "chest_tightness",
+    "tight chest": "chest_tightness",
+    "heart racing": "palpitations",
+    "fast heartbeat": "tachycardia",
+    "rapid heart rate": "tachycardia",
+    "irregular heartbeat": "irregular_heartbeat",
+    "heart skipping": "palpitations",
+    "coughing up blood": "hemoptysis",
+    "blood in spit": "hemoptysis",
+    "productive cough": "productive_cough",
+    "wet cough": "productive_cough",
+    "dry cough": "cough",
+    "sore throat": "sore_throat",
+    "throat pain": "sore_throat",
+    "throat swelling": "throat_swelling",
+    "neck stiffness": "neck_stiffness",
+    "stiff neck": "neck_stiffness",
+    "muscle pain": "myalgia",
+    "body aches": "myalgia",
+    "muscle aches": "myalgia",
+    "joint pain": "joint_pain",
+    "joint swelling": "joint_swelling",
+    "swollen joints": "joint_swelling",
+    "leg pain": "leg_pain",
+    "leg swelling": "leg_swelling",
+    "swollen leg": "leg_swelling",
+    "calf pain": "calf_tenderness",
+    "arm weakness": "arm_weakness",
+    "face drooping": "facial_drooping",
+    "face weakness": "facial_drooping",
+    "slurred speech": "speech_difficulty",
+    "trouble speaking": "speech_difficulty",
+    "vision problems": "vision_changes",
+    "blurry vision": "vision_changes",
+    "loss of balance": "loss_of_balance",
+    "confusion": "confusion",
+    "disoriented": "confusion",
+    "not making sense": "confusion",
+    "burning urination": "dysuria",
+    "pain when urinating": "dysuria",
+    "upper right pain": "right_upper_quadrant_pain",
+    "right upper belly pain": "right_upper_quadrant_pain",
+    "upper belly pain": "epigastric_pain",
+    "stomach pain": "epigastric_pain",
+    "heartburn": "heartburn",
+    "acid reflux": "heartburn",
+    "back pain": "radiating_back_pain",
+    "shoulder pain": "right_shoulder_pain",
+    "side pain": "flank_pain",
+    "flank pain": "flank_pain",
+    "kidney pain": "flank_pain",
+    "dark urine": "dark_urine",
+    "cola colored urine": "dark_urine",
+    "no smell": "anosmia",
+    "loss of smell": "anosmia",
+    "no taste": "ageusia",
+    "loss of taste": "ageusia",
+    "passing out": "syncope",
+    "fainting": "syncope",
+    "fainted": "syncope",
+    "excessive thirst": "polydipsia",
+    "drinking a lot": "polydipsia",
+    "urinating a lot": "polyuria",
+    "peeing a lot": "polyuria",
+    "fruity breath": "fruity_breath",
+    "sweet breath": "fruity_breath",
+    "weight gain": "weight_gain",
+    "weight loss": "weight_loss",
+    "losing weight": "weight_loss",
+    "feeling cold": "cold_intolerance",
+    "always cold": "cold_intolerance",
+    "feeling hot": "heat_intolerance",
+    "overheating": "heat_intolerance",
+    "skin rash": "rash",
+    "hives": "urticaria",
+    "itchy skin": "urticaria",
+    "redness": "skin_redness",
+    "skin redness": "skin_redness",
+    "anxiety": "excessive_worry",
+    "worried": "excessive_worry",
+    "nervous": "excessive_worry",
+    "feeling of doom": "fear_of_dying",
+    "numbness": "numbness",
+    "tingling": "numbness",
+    "pins and needles": "numbness",
+    "tearing pain": "tearing_chest_pain",
+    "ripping pain": "tearing_chest_pain",
+    "left side pain": "left_lower_quadrant_pain",
+    "llq pain": "left_lower_quadrant_pain"
+  }
+}

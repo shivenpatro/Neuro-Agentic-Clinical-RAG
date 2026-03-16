@@ -1,0 +1,24 @@
+{
+  "node_types": {
+    "symptom": {
+      "color": "#3B82F6",
+      "shape": "circle",
+      "description": "A clinical sign or symptom reported by patient"
+    },
+    "disease": {
+      "color": "#10B981",
+      "shape": "diamond",
+      "description": "A diagnosed medical condition"
+    },
+    "exclusion": {
+      "color": "#EF4444",
+      "shape": "square",
+      "description": "A symptom that rules out a diagnosis"
+    }
+  },
+  "edge_types": {
+    "SUGGESTS": "Symptom supports this diagnosis with a confidence weight",
+    "EXCLUDES": "Symptom makes this diagnosis logically impossible",
+    "REQUIRED_FOR": "Symptom must be present for diagnosis to be valid"
+  }
+}

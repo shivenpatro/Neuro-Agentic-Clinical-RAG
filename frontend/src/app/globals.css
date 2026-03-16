@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&display=swap");
+@import "tailwindcss";
+
+:root {
+  --bg-primary: #060a0f;
+  --bg-card: #0d1117;
+  --bg-card-hover: #131b24;
+  --border: #1e2d3d;
+  --border-subtle: #162030;
+  --text-primary: #e2eaf4;
+  --text-secondary: #7d9bb8;
+  --text-muted: #3d5a73;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-emerald: #10b981;
+  --accent-red: #ef4444;
+  --accent-amber: #f59e0b;
+  --font-mono: "IBM Plex Mono", monospace;
+  --font-serif: "Instrument Serif", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 2px;
+}
