@@ -18,6 +18,8 @@ export function SettingsDialog() {
     setCustomBaseUrl,
     customModelName,
     setCustomModelName,
+    groqModelName,
+    setGroqModelName,
   } = usePipelineStore();
 
   useEffect(() => {
@@ -26,19 +28,22 @@ export function SettingsDialog() {
     const savedKey = localStorage.getItem("rag_api_key");
     const savedUrl = localStorage.getItem("rag_base_url");
     const savedModel = localStorage.getItem("rag_model");
+    const savedGroqModel = localStorage.getItem("groq_model");
 
     if (savedProvider) setLlmProvider(savedProvider as any);
     if (savedKey) setApiKey(savedKey);
     if (savedUrl) setCustomBaseUrl(savedUrl);
     if (savedModel) setCustomModelName(savedModel);
-  }, [setLlmProvider, setApiKey, setCustomBaseUrl, setCustomModelName]);
+    if (savedGroqModel) setGroqModelName(savedGroqModel);
+  }, [setLlmProvider, setApiKey, setCustomBaseUrl, setCustomModelName, setGroqModelName]);
 
   useEffect(() => {
     localStorage.setItem("rag_provider", llmProvider);
     localStorage.setItem("rag_api_key", apiKey);
     localStorage.setItem("rag_base_url", customBaseUrl);
     localStorage.setItem("rag_model", customModelName);
-  }, [llmProvider, apiKey, customBaseUrl, customModelName]);
+    localStorage.setItem("groq_model", groqModelName);
+  }, [llmProvider, apiKey, customBaseUrl, customModelName, groqModelName]);
 
   return (
     <>
@@ -145,8 +150,21 @@ export function SettingsDialog() {
                                 </a>
                               </p>
                             </div>
-                            <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/20 text-xs text-blue-400 font-mono">
-                              Default model: llama3-70b-8192 (Fast & Free)
+                            <div className="space-y-1.5">
+                              <label className="text-xs font-mono text-slate-400">
+                                Model Name
+                              </label>
+                              <select
+                                value={groqModelName}
+                                onChange={(e) => setGroqModelName(e.target.value)}
+                                className="w-full bg-[#060a0f] border border-[#1e2d3d] rounded-lg px-3 py-2 text-sm font-mono text-slate-200 focus:outline-none focus:border-blue-500/40"
+                              >
+                                <option value="llama-3.3-70b-versatile">llama-3.3-70b-versatile (Recommended)</option>
+                                <option value="llama-3.1-8b-instant">llama-3.1-8b-instant (Fast)</option>
+                                <option value="llama-3.1-70b-versatile">llama-3.1-70b-versatile</option>
+                                <option value="mixtral-8x7b-32768">mixtral-8x7b-32768</option>
+                                <option value="gemma2-9b-it">gemma2-9b-it</option>
+                              </select>
                             </div>
                           </>
                         )}

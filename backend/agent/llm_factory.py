@@ -29,11 +29,12 @@ def get_llm_client(config: Optional[dict] = None) -> tuple[OpenAI, str]:
     
     if provider == "groq":
         api_key = config.get("api_key")
+        model = config.get("model_name", "llama-3.3-70b-versatile")
         if not api_key:
             raise ValueError("Groq API Key is required")
         return (
             OpenAI(base_url="https://api.groq.com/openai/v1", api_key=api_key),
-            "llama3-70b-8192"  # Default high-performance free model
+            model
         )
         
     if provider == "custom":

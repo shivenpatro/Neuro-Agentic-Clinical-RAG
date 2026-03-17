@@ -34,6 +34,8 @@ interface PipelineState {
   setCustomBaseUrl: (u: string) => void;
   customModelName: string;
   setCustomModelName: (m: string) => void;
+  groqModelName: string;
+  setGroqModelName: (m: string) => void;
 
   error: string | null;
   setError: (error: string | null) => void;
@@ -69,6 +71,8 @@ export const usePipelineStore = create<PipelineState>((set) => ({
   setCustomBaseUrl: (customBaseUrl) => set({ customBaseUrl }),
   customModelName: "",
   setCustomModelName: (customModelName) => set({ customModelName }),
+  groqModelName: "llama-3.1-70b-versatile",
+  setGroqModelName: (groqModelName) => set({ groqModelName }),
 
   error: null,
   setError: (error) => set({ error }),

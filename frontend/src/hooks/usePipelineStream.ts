@@ -52,6 +52,7 @@ export function usePipelineStream() {
     apiKey,
     customBaseUrl,
     customModelName,
+    groqModelName,
   } = usePipelineStore();
 
   const runPipeline = useCallback(async () => {
@@ -64,7 +65,7 @@ export function usePipelineStream() {
         setError("Groq API Key is required. Please set it in Settings.");
         return;
       }
-      llmConfig = { provider: "groq", api_key: apiKey };
+      llmConfig = { provider: "groq", api_key: apiKey, model_name: groqModelName };
     } else if (llmProvider === "custom") {
       if (!customBaseUrl || !apiKey || !customModelName) {
         setError("Base URL, API Key, and Model Name are required for custom provider.");
@@ -144,6 +145,7 @@ export function usePipelineStream() {
     apiKey,
     customBaseUrl,
     customModelName,
+    groqModelName,
   ]);
 
   return { runPipeline };
