@@ -21,6 +21,11 @@ class Settings(BaseSettings):
     # Database
     database_url: str = "sqlite+aiosqlite:///./clinical_rag.db"
 
+    # Pinecone
+    pinecone_api_key: str = ""
+    pinecone_index_name: str = "medical-knowledge"
+    pinecone_environment: str = "us-east-1"
+
     # JWT Auth
     jwt_secret: str = secrets.token_urlsafe(32)
     jwt_algorithm: str = "HS256"

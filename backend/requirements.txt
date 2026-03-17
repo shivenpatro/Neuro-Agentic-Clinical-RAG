@@ -15,10 +15,12 @@ pytest-asyncio==0.23.7
 rich==13.7.1
 # Database
 sqlalchemy==2.0.30
-aiosqlite==0.20.0
+asyncpg==0.29.0
+greenlet==3.0.3
 # Auth
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 # RAG
-chromadb==0.5.3
+pinecone-client
+langchain-pinecone
 sentence-transformers==3.0.1
