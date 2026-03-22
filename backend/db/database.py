@@ -1,4 +1,4 @@
-"""Async SQLAlchemy engine and session factory for SQLite."""
+"""Async SQLAlchemy engine: Postgres (asyncpg) or SQLite (aiosqlite)."""
 from __future__ import annotations
 
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine

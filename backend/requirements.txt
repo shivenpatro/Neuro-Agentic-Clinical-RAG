@@ -9,9 +9,10 @@ networkx==3.3
 pytest==8.2.0
 pytest-asyncio==0.23.7
 rich==13.7.1
-# Database
+# Database (asyncpg for Neon/Postgres; aiosqlite for local SQLite default)
 sqlalchemy==2.0.30
 asyncpg==0.29.0
+aiosqlite==0.20.0
 greenlet==3.0.3
 # Auth
 python-jose[cryptography]==3.3.0

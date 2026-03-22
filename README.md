@@ -123,7 +123,7 @@ Default retrieval is **`RAG_MODE=keyword`**: overlap search over `symptom_diseas
 | Variable | Notes |
 |----------|--------|
 | `PYTHON_VERSION` | `3.12.7` if the build still uses 3.14.x. |
-| `DATABASE_URL` | Neon URL; `postgresql://...?ssl=require` (app rewrites for `asyncpg`). |
+| `DATABASE_URL` | **Required for production:** Neon Postgres URL (`postgresql://...?ssl=require`). If unset, the app falls back to local SQLite — that needs **`aiosqlite`** (now in requirements) so the service starts, but **Render’s disk is ephemeral** so use Neon for real data. |
 | `RAG_MODE` | `keyword` (default) or `none` to turn off retrieval. |
 | `CORS_ORIGINS` | Your Vercel URL(s) or `*` for tests. |
 
