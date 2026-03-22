@@ -116,10 +116,13 @@ Default retrieval is **`RAG_MODE=keyword`**: overlap search over `symptom_diseas
 
 **Typical free stack:** Neon free Postgres + Render free web service + Vercel frontend + Groq (free tier) + `RAG_MODE=keyword`.
 
+**Python version (fixes most “Exited with status 1” builds):** New Render services default to **Python 3.14**, which often has **no binary wheels** for `asyncpg` / `greenlet` / `pydantic-core`, so `pip install` fails. This repo includes **`.python-version`** (`3.12.7`) at the project root. If Render still picks 3.14, set env **`PYTHON_VERSION=3.12.7`** on the service (fully qualified, per [Render docs](https://render.com/docs/python-version)).
+
 **Env vars on Render (backend, root `backend/`):**
 
 | Variable | Notes |
 |----------|--------|
+| `PYTHON_VERSION` | `3.12.7` if the build still uses 3.14.x. |
 | `DATABASE_URL` | Neon URL; `postgresql://...?ssl=require` (app rewrites for `asyncpg`). |
 | `RAG_MODE` | `keyword` (default) or `none` to turn off retrieval. |
 | `CORS_ORIGINS` | Your Vercel URL(s) or `*` for tests. |
