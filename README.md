@@ -20,7 +20,7 @@ A neurosymbolic AI pipeline for clinical decision support that combines neural e
 
 ## Tech Stack
 
-- **Backend**: Python, FastAPI, NetworkX (Graph), Pinecone (vector RAG), SQLAlchemy + asyncpg (Neon/SQLite), LangChain.
+- **Backend**: Python, FastAPI, NetworkX (Graph), keyword or optional Pinecone RAG, SQLAlchemy + asyncpg (Neon/SQLite).
 - **Frontend**: Next.js (App Router), TypeScript, Tailwind CSS, React Force Graph, Zustand.
 - **LLM**: Ollama (Local), Groq (Cloud).
 
@@ -110,27 +110,23 @@ A neurosymbolic AI pipeline for clinical decision support that combines neural e
     - Verify **Drug Interactions** in the side panel.
     - **Export** the report to PDF.
 
-## Hosting on Render (free tier)
+## Hosting on Render (free tier, $0 RAG)
 
-Render builds often fail with **“Exited with status 1”** while installing Python deps because **`sentence-transformers` pulls PyTorch (~2GB+)** and the free builder runs out of RAM or disk. This repo’s default `requirements.txt` **does not** install PyTorch; embeddings use **OpenAI `text-embedding-3-small`** instead.
+Default retrieval is **`RAG_MODE=keyword`**: overlap search over `symptom_disease.json` — **no Pinecone, no OpenAI, no PyTorch, no embeddings.** Use a **free Groq API key** in the UI for the LLM; Groq does **not** provide embeddings, so it cannot replace vector search.
 
-**Required env vars on Render (backend web service, root `backend/`):**
+**Typical free stack:** Neon free Postgres + Render free web service + Vercel frontend + Groq (free tier) + `RAG_MODE=keyword`.
+
+**Env vars on Render (backend, root `backend/`):**
 
 | Variable | Notes |
 |----------|--------|
-| `DATABASE_URL` | Neon Postgres URL; use `postgresql://...?ssl=require` — the app rewrites it for `asyncpg`. |
-| `PINECONE_API_KEY` | From Pinecone dashboard. |
-| `OPENAI_API_KEY` | **Required for RAG embeddings** on cloud (small $; no local model download). |
-| `CORS_ORIGINS` | Your Vercel URL(s), comma-separated, or `*` for quick tests. |
+| `DATABASE_URL` | Neon URL; `postgresql://...?ssl=require` (app rewrites for `asyncpg`). |
+| `RAG_MODE` | `keyword` (default) or `none` to turn off retrieval. |
+| `CORS_ORIGINS` | Your Vercel URL(s) or `*` for tests. |
 
-**Pinecone index dimensions**
+**Optional paid vector RAG:** Set `RAG_MODE=pinecone`, add `PINECONE_*` / `OPENAI_API_KEY`, and install **`requirements-optional-pinecone.txt`** (heavy; not for free-only hosting).
 
-- With `OPENAI_API_KEY`: index is created at **1536** dimensions.
-- If you previously created `medical-knowledge` at **384** (old MiniLM setup), either **delete that index** in Pinecone or set `PINECONE_INDEX_NAME` to a new name (e.g. `medical-knowledge-v2`).
-
-**Local dev without OpenAI:** `pip install -r requirements-optional.txt` for HuggingFace MiniLM (384-dim); omit `OPENAI_API_KEY` only if that package is installed.
-
-**Render MCP:** In Cursor, open the Render MCP and **select your workspace** first; then tools like `list_logs` can show the exact build error (`type`: `build`).
+**Render MCP:** Select your Render workspace in Cursor, then use `list_logs` with `type: build` to debug failures.
 
 ## Project Structure
 

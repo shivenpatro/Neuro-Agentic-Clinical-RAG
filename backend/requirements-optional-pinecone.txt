@@ -1,0 +1,9 @@
+# Optional vector RAG (Pinecone). Heavy / paid embeddings — not needed for free hosting.
+# pip install -r requirements-optional-pinecone.txt
+# Set RAG_MODE=pinecone and env vars PINECONE_*, OPENAI_API_KEY (or HF + sentence-transformers).
+
+langchain==0.2.1
+langchain-openai==0.1.8
+langchain-community==0.2.1
+pinecone-client
+langchain-pinecone

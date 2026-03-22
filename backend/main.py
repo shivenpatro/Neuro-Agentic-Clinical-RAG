@@ -50,10 +50,9 @@ async def lifespan(app: FastAPI):
     await init_db()
     console.print("[green]Database initialized[/green]")
 
-    # Initialize RAG vector store (non-fatal if chromadb not available)
     import asyncio
     await asyncio.to_thread(initialize_rag)
-    console.print("[green]RAG vector store ready[/green]")
+    console.print("[green]RAG retrieval ready[/green]")
 
     yield
     console.print("[yellow]Shutting down...[/yellow]")

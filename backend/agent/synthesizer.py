@@ -116,7 +116,7 @@ def synthesize(
             "phase_name": "RAG Evidence",
             "icon": "database",
             "status": "completed",
-            "summary": f"{len(rag_evidence)} relevant passage(s) retrieved from knowledge vector store",
+            "summary": f"{len(rag_evidence)} relevant passage(s) retrieved from the medical knowledge base",
             "details": [{"label": f"Doc {i + 1}", "value": doc[:120] + "..."} for i, doc in enumerate(rag_evidence)],
         })
 
