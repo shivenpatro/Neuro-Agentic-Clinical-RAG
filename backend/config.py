@@ -1,7 +1,18 @@
+import os
 import secrets
 from typing import List, Union
 
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def _listen_port_from_env() -> int:
+    """Render sets numeric PORT. Avoid API_PORT=literal '$PORT' breaking int parsing."""
+    for key in ("PORT", "API_PORT"):
+        raw = os.environ.get(key, "").strip()
+        if raw.isdigit():
+            return int(raw)
+    return 8000
 
 
 class Settings(BaseSettings):
@@ -17,6 +28,19 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"
     api_port: int = 8000
     cors_origins: Union[str, List[str]] = "http://localhost:3000"
+
+    @field_validator("api_port", mode="before")
+    @classmethod
+    def resolve_api_port(cls, v):
+        # Pydantic-settings may read API_PORT from env as the literal "$PORT" on some hosts.
+        resolved = _listen_port_from_env()
+        if resolved != 8000:
+            return resolved
+        if isinstance(v, int):
+            return v
+        if isinstance(v, str) and v.strip().isdigit():
+            return int(v.strip())
+        return 8000
 
     # Database
     database_url: str = "sqlite+aiosqlite:///./clinical_rag.db"

@@ -127,6 +127,8 @@ Default retrieval is **`RAG_MODE=keyword`**: overlap search over `symptom_diseas
 | `RAG_MODE` | `keyword` (default) or `none` to turn off retrieval. |
 | `CORS_ORIGINS` | Your Vercel URL(s) or `*` for tests. |
 
+**Do not** set `API_PORT` to the literal string `$PORT` in Render — env vars are not shell-expanded, so Pydantic would see the text `$PORT` and fail. Use only the start command `uvicorn ... --port $PORT`; Render sets a numeric **`PORT`** env var, which the app reads automatically.
+
 **Optional paid vector RAG:** Set `RAG_MODE=pinecone`, add `PINECONE_*` / `OPENAI_API_KEY`, and install **`requirements-optional-pinecone.txt`** (heavy; not for free-only hosting).
 
 **Render MCP:** Select your Render workspace in Cursor, then use `list_logs` with `type: build` to debug failures.
