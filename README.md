@@ -14,13 +14,13 @@ A neurosymbolic AI pipeline for clinical decision support that combines neural e
   - **Custom**: Any OpenAI-compatible API.
 - **Interactive Knowledge Graph**: Visualize the relationships between symptoms and diseases in real-time.
 - **Drug Interaction Checker**: Integration with OpenFDA and RxNorm to check for drug-drug interactions and contraindications.
-- **Clinical History**: Save and manage patient cases with a built-in SQLite database.
+- **Clinical History**: Save and manage patient cases (SQLite locally, Neon Postgres when deployed).
 - **Report Generation**: Export detailed clinical reports as PDF.
 - **Dockerized**: Easy deployment with Docker Compose.
 
 ## Tech Stack
 
-- **Backend**: Python, FastAPI, NetworkX (Graph), ChromaDB (Vector Store), SQLAlchemy (SQLite), LangChain.
+- **Backend**: Python, FastAPI, NetworkX (Graph), Pinecone (vector RAG), SQLAlchemy + asyncpg (Neon/SQLite), LangChain.
 - **Frontend**: Next.js (App Router), TypeScript, Tailwind CSS, React Force Graph, Zustand.
 - **LLM**: Ollama (Local), Groq (Cloud).
 
@@ -109,6 +109,28 @@ A neurosymbolic AI pipeline for clinical decision support that combines neural e
     - Check **Differential Diagnoses**.
     - Verify **Drug Interactions** in the side panel.
     - **Export** the report to PDF.
+
+## Hosting on Render (free tier)
+
+Render builds often fail with **“Exited with status 1”** while installing Python deps because **`sentence-transformers` pulls PyTorch (~2GB+)** and the free builder runs out of RAM or disk. This repo’s default `requirements.txt` **does not** install PyTorch; embeddings use **OpenAI `text-embedding-3-small`** instead.
+
+**Required env vars on Render (backend web service, root `backend/`):**
+
+| Variable | Notes |
+|----------|--------|
+| `DATABASE_URL` | Neon Postgres URL; use `postgresql://...?ssl=require` — the app rewrites it for `asyncpg`. |
+| `PINECONE_API_KEY` | From Pinecone dashboard. |
+| `OPENAI_API_KEY` | **Required for RAG embeddings** on cloud (small $; no local model download). |
+| `CORS_ORIGINS` | Your Vercel URL(s), comma-separated, or `*` for quick tests. |
+
+**Pinecone index dimensions**
+
+- With `OPENAI_API_KEY`: index is created at **1536** dimensions.
+- If you previously created `medical-knowledge` at **384** (old MiniLM setup), either **delete that index** in Pinecone or set `PINECONE_INDEX_NAME` to a new name (e.g. `medical-knowledge-v2`).
+
+**Local dev without OpenAI:** `pip install -r requirements-optional.txt` for HuggingFace MiniLM (384-dim); omit `OPENAI_API_KEY` only if that package is installed.
+
+**Render MCP:** In Cursor, open the Render MCP and **select your workspace** first; then tools like `list_logs` can show the exact build error (`type`: `build`).
 
 ## Project Structure
 

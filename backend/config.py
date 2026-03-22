@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     pinecone_index_name: str = "medical-knowledge"
     pinecone_environment: str = "us-east-1"
 
+    # Embeddings for Pinecone (Render-friendly: no PyTorch). Uses OpenAI API; cheap model.
+    # For local dev without this key, install requirements-optional.txt and HuggingFace path is used.
+    openai_api_key: str = ""
+
     # JWT Auth
     jwt_secret: str = secrets.token_urlsafe(32)
     jwt_algorithm: str = "HS256"

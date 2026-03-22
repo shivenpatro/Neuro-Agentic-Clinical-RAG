@@ -1,0 +1,2 @@
+# Optional local embeddings (pulls PyTorch — do NOT use on Render free tier)
+sentence-transformers==3.0.1

@@ -2,8 +2,10 @@
 rag/retriever.py
 Pinecone-based vector store for medical knowledge retrieval.
 
-Documents are built from symptom_disease.json on startup and embedded with
-all-MiniLM-L6-v2.
+Production (e.g. Render free tier): uses OpenAI text-embedding-3-small — no PyTorch / sentence-transformers
+(those packages pull ~2GB+ and often OOM during pip install on small builders).
+
+Local optional: install backend/requirements-optional.txt to use HuggingFace MiniLM without OpenAI.
 """
 from __future__ import annotations
 
@@ -11,16 +13,16 @@ import json
 import os
 import time
 from pathlib import Path
-from typing import List
+from typing import List, Optional, Tuple
 
 from langchain_core.documents import Document
 from config import settings
 
 _COLLECTION_NAME = settings.pinecone_index_name
-_EMBED_MODEL = "all-MiniLM-L6-v2"
 
 # Module-level singletons — initialized lazily
 _vector_store = None
+
 
 def _get_knowledge_documents() -> list[Document]:
     """Load disease + symptom descriptions from the JSON knowledge base."""
@@ -43,9 +45,34 @@ def _get_knowledge_documents() -> list[Document]:
             f"Description: {desc} "
             f"Common symptoms: {symptoms}."
         )
-        docs.append(Document(page_content=doc_content, metadata={"id": f"disease_{did}", "name": name}))
+        docs.append(
+            Document(page_content=doc_content, metadata={"id": f"disease_{did}", "name": name})
+        )
 
     return docs
+
+
+def _make_embeddings() -> Tuple[Optional[object], int, str]:
+    """
+    Returns (embeddings_obj, vector_dimension, mode_label).
+    """
+    if settings.openai_api_key:
+        from langchain_openai import OpenAIEmbeddings
+
+        emb = OpenAIEmbeddings(
+            model="text-embedding-3-small",
+            api_key=settings.openai_api_key,
+        )
+        return emb, 1536, "openai"
+
+    try:
+        from langchain_community.embeddings import HuggingFaceEmbeddings
+
+        emb = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        return emb, 384, "huggingface"
+    except Exception:
+        return None, 0, "none"
+
 
 def initialize_rag() -> None:
     """Build the Pinecone index from the knowledge base. Called once on startup."""
@@ -54,7 +81,6 @@ def initialize_rag() -> None:
     try:
         from pinecone import Pinecone, ServerlessSpec
         from langchain_pinecone import PineconeVectorStore
-        from langchain_community.embeddings import HuggingFaceEmbeddings
     except ImportError:
         print("[RAG] pinecone-client or langchain-pinecone not installed — RAG disabled.")
         return
@@ -63,34 +89,48 @@ def initialize_rag() -> None:
         print("[RAG] PINECONE_API_KEY is not set. RAG disabled.")
         return
 
+    embeddings, embed_dim, mode = _make_embeddings()
+    if embeddings is None or embed_dim == 0:
+        print(
+            "[RAG] No embedding backend: set OPENAI_API_KEY (recommended for cloud) "
+            "or `pip install -r requirements-optional.txt` for local HuggingFace embeddings."
+        )
+        return
+
     try:
-        print(f"[RAG] Initializing Pinecone index '{_COLLECTION_NAME}'...")
+        print(f"[RAG] Initializing Pinecone index '{_COLLECTION_NAME}' (embeddings={mode}, dim={embed_dim})...")
         pc = Pinecone(api_key=settings.pinecone_api_key)
-        
-        # Check if index exists, create if not
+
         existing_indexes = [index_info["name"] for index_info in pc.list_indexes()]
         if _COLLECTION_NAME not in existing_indexes:
             print(f"[RAG] Creating new Pinecone index '{_COLLECTION_NAME}'...")
             pc.create_index(
                 name=_COLLECTION_NAME,
-                dimension=384, # dimension for all-MiniLM-L6-v2
+                dimension=embed_dim,
                 metric="cosine",
                 spec=ServerlessSpec(
                     cloud="aws",
-                    region=settings.pinecone_environment
-                )
+                    region=settings.pinecone_environment,
+                ),
             )
-            # Wait for index to be ready
-            while not pc.describe_index(_COLLECTION_NAME).status['ready']:
+            while not pc.describe_index(_COLLECTION_NAME).status["ready"]:
                 time.sleep(1)
             print("[RAG] Index created successfully.")
+        else:
+            # Index already exists — dimension must match embedding model.
+            desc = pc.describe_index(_COLLECTION_NAME)
+            existing_dim = getattr(desc, "dimension", None)
+            if existing_dim is not None and int(existing_dim) != embed_dim:
+                print(
+                    f"[RAG] Index '{_COLLECTION_NAME}' has dimension {existing_dim} but "
+                    f"current embeddings need {embed_dim}. Delete the index in Pinecone or set "
+                    "PINECONE_INDEX_NAME to a new name (e.g. medical-knowledge-v2)."
+                )
+                return
 
         index = pc.Index(_COLLECTION_NAME)
-        embeddings = HuggingFaceEmbeddings(model_name=_EMBED_MODEL)
-        
         _vector_store = PineconeVectorStore(index=index, embedding=embeddings)
 
-        # Check if index is empty
         stats = index.describe_index_stats()
         if stats.total_vector_count == 0:
             docs = _get_knowledge_documents()
@@ -102,6 +142,7 @@ def initialize_rag() -> None:
     except Exception as exc:
         print(f"[RAG] Initialization failed (non-fatal): {exc}")
         _vector_store = None
+
 
 def retrieve_context(query: str, n_results: int = 3) -> List[str]:
     """Return the top-k most relevant passages for the given clinical query."""
