@@ -155,6 +155,13 @@ Default retrieval is **`RAG_MODE=keyword`**: overlap search over `symptom_diseas
 └── README.md             # Project documentation
 ```
 
+## Production checklist
+
+- **`DATABASE_URL`**: Neon (or other Postgres) for persistent cases; SQLite on ephemeral hosts loses data on restart.
+- **`JWT_SECRET`**: Set a long random string in production. If omitted, a new secret is generated on every process start — all logins break after each deploy.
+- **`CORS_ORIGINS`**: List explicit frontend origins (comma-separated). Using `*` disables `Access-Control-Allow-Credentials` in this app (browser rules).
+- **History API** (`/api/history/*`): Requires a valid **Bearer** token (login/register or admin credentials from env). Cases are not scoped per user yet — any logged-in user can list all saved cases.
+
 ## Contributing
 
 Contributions are welcome! Please open an issue or submit a pull request.

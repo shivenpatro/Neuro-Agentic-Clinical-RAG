@@ -7,8 +7,10 @@ from sqlalchemy.orm import DeclarativeBase
 from config import settings
 
 db_url = settings.database_url
-# Fix Neon Postgres URLs for asyncpg
-if db_url.startswith("postgres://"):
+# Neon / Postgres URLs for SQLAlchemy asyncpg (avoid double-replacing postgresql+asyncpg://)
+if db_url.startswith("postgresql+asyncpg://"):
+    pass
+elif db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql+asyncpg://", 1)
 elif db_url.startswith("postgresql://"):
     db_url = db_url.replace("postgresql://", "postgresql+asyncpg://", 1)

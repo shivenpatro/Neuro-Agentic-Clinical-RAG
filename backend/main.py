@@ -21,7 +21,7 @@ from agent.streamer import stream_pipeline
 from agent.synthesizer import synthesize
 from agent.verifier import verify_and_decide
 from auth import router as auth_router
-from auth.jwt import get_current_user
+from auth.jwt import require_current_user
 from config import get_cors_origins, settings
 from db import crud
 from db.database import get_db, init_db
@@ -46,7 +46,6 @@ async def lifespan(app: FastAPI):
         console.print(f"[bold red]Failed to build knowledge graph: {exc}[/bold red]")
         sys.exit(1)
 
-    # Initialize SQLite database tables
     await init_db()
     console.print("[green]Database initialized[/green]")
 
@@ -65,10 +64,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+_cors_origins = get_cors_origins()
+# Browsers forbid credentials with Access-Control-Allow-Origin: * — disable credentials if wildcard.
+_cors_credentials = not any((o.strip() == "*" for o in _cors_origins))
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=get_cors_origins(),
-    allow_credentials=True,
+    allow_origins=_cors_origins,
+    allow_credentials=_cors_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -195,7 +197,7 @@ async def get_history(
     limit: int = 20,
     offset: int = 0,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
+    _: dict = Depends(require_current_user),
 ):
     cases = await crud.get_cases(db, limit=limit, offset=offset)
     return [
@@ -217,7 +219,7 @@ async def get_history(
 async def get_case(
     case_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
+    _: dict = Depends(require_current_user),
 ):
     case = await crud.get_case(db, case_id)
     if not case:
@@ -239,7 +241,7 @@ async def get_case(
 async def delete_case(
     case_id: int,
     db: AsyncSession = Depends(get_db),
-    _: dict = Depends(get_current_user),
+    _: dict = Depends(require_current_user),
 ):
     deleted = await crud.delete_case(db, case_id)
     if not deleted:

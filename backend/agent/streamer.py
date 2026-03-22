@@ -15,8 +15,11 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import time
 from typing import AsyncGenerator
+
+logger = logging.getLogger(__name__)
 
 from agent.extractor import extract_symptoms
 from agent.synthesizer import synthesize
@@ -98,5 +101,6 @@ async def stream_pipeline(clinical_text: str, llm_config: dict | None = None) ->
     try:
         async with AsyncSessionLocal() as db:
             await crud.create_case(db, response, clinical_text)
-    except Exception:
-        pass  # DB save is best-effort; never block or error the SSE stream
+    except Exception as exc:
+        # Best-effort save; do not fail the stream — log for ops (e.g. missing DATABASE_URL / schema).
+        logger.warning("SSE pipeline: could not persist case to DB: %s", exc)

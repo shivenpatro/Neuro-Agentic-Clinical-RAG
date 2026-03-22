@@ -342,7 +342,15 @@ export function GraphTopology() {
         <div className="flex items-center gap-2">
           <button onClick={() => { zoomRef.current = Math.min(4, zoomRef.current * 1.2); setZoom(zoomRef.current); requestAnimationFrame(draw); }} className="p-1.5 rounded-lg border border-[#1e2d3d] text-slate-500 hover:text-slate-300 transition-colors"><ZoomIn className="w-3.5 h-3.5" /></button>
           <button onClick={() => { zoomRef.current = Math.max(0.2, zoomRef.current * 0.8); setZoom(zoomRef.current); requestAnimationFrame(draw); }} className="p-1.5 rounded-lg border border-[#1e2d3d] text-slate-500 hover:text-slate-300 transition-colors"><ZoomOut className="w-3.5 h-3.5" /></button>
-          <button onClick={fetchTopology} className="p-1.5 rounded-lg border border-[#1e2d3d] text-slate-500 hover:text-slate-300 transition-colors"><RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} /></button>
+          <button
+            type="button"
+            onClick={() => {
+              void fetchTopology();
+            }}
+            className="p-1.5 rounded-lg border border-[#1e2d3d] text-slate-500 hover:text-slate-300 transition-colors"
+          >
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
+          </button>
         </div>
       </div>
 
